@@ -1,0 +1,4 @@
+#include <winresrc.h>
+#include "resource.h"
+
+ICON_MAIN ICON "pborca.ico"

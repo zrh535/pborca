@@ -1,0 +1,33 @@
+!include <ntwin32.mak>
+
+
+PRJNAME=pborca
+
+.cpp.obj:
+	$(cc) -Ox $(cflags) $(cvars) -DSTRICT -YX -DNODEBUG $<
+
+
+CPP_FILES= main.cpp orca.cpp parm.cpp impexp.cpp target.cpp pbg.cpp
+
+OBJS= $(CPP_FILES:.cpp=.obj)
+
+
+
+all: $(PRJNAME).res $(PRJNAME).exe
+
+$(PRJNAME).res: $(PRJNAME).rc
+   rc $(rcvars) $(rcplags) -r -fo $(PRJNAME).res $(PRJNAME).rc
+
+$(PRJNAME).exe: $(OBJS)
+  $(link) /RELEASE $(conlflags) -out:bin\$*a.exe $** $(PRJNAME).res $(conlibs) \
+    user32.lib advapi32.lib
+
+clean:
+    -del *.obj
+	-del *.pch
+	-del *.exp
+	-del *.lib
+	-del *.res
+	-del *.aps
+
+

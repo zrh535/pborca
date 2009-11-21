@@ -1,0 +1,565 @@
+<html>
+
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=windows-1251">
+<META NAME="keywords" CONTENT="dmitry lukyanov powerbuilder compile power builder batch pborca orca script">
+<title>PBORCA</title>
+
+<STYLE>
+    .cmd { 
+		font-family: Courier new,Courier;
+		font-size: 9pt;
+		color: Blue;
+	}
+    .parm { 
+		font-family: Courier new,Courier;
+		font-size: 9pt;
+		color: Maroon;
+	}
+    .rem { 
+		font-family: Courier new,Courier;
+		font-size: 9pt;
+		font-style: italic;
+		color: #808080;
+	}
+    .tab { 
+		font-family: Courier new,Courier;
+		font-size: 8pt;
+		background: #C0C0C0;
+	}
+</STYLE>
+
+</head>
+
+<body bgcolor=#ffffff>
+
+<font color=red>
+NEW: Wide char PBORCA!!!<br>
+<br>
+Note: The pborca script file and command line parameters are still ANSI
+</font>
+<hr>
+
+<b>WHAT IS PBORCA.EXE ?</b> - it is a free tool to compile Powerbuilder projects and to manage objects in PBL libraries.<br>
+<b>*.ORC</b> files - it's a special scripts to do it.<br>
+
+<br>
+Download New UNICODE+ANSI version: <a href="pborcaw.zip">pborcaW.zip</a> version (YMD)2009-11-19<br>
+<!--Download Old ANSI version: <a href="pborcaa.rar">pborcaA.rar</a> version (YMD)2005-01-13<br-->
+
+
+<hr>
+<b>Package contents</b>
+<table border=1 cellspacing=0>
+<tr>
+<th>install.cmd</th><td>installation script: copies <b>pborca.exe</b> to <b>windows\system32</b> directory and imports <b>pborca.reg</b> into your registry</td>
+</tr>
+<tr>
+<th>pborca.exe</th><td>A unicode tool to execute orca scripts (*.orc)</td>
+</tr>
+<tr>
+<th>pborcaa.exe</th><td>An ansi tool to execute orca scripts (*.orc)</td>
+</tr>
+<tr>
+<th>pborca.htm</th><td>this file</td>
+</tr>
+<tr>
+<th>example.orc</th><td>contains all <b>orca script</b> commands with explanations.</td>
+</tr>
+<tr>
+<th>pborca.reg</th><td>windows registry modification to support context menu for <b>*.orc</b> files</td>
+</tr>
+</table>
+
+<p>
+You can use <b>install.cmd</b> to install this tool on your computer.<br>
+After installation you'll have a special context menu in the explorer for <b>*.orc</b> files:
+<table border=1 cellspacing=0>
+ <tr>
+  <td><b>Edit Script</b></td>
+  <td>opens selected orca script using <b>notepad</b></td>
+ </tr>
+ <tr>
+  <td><b>Run Script</b></td>
+  <td>executes all commands from the selected <b>orca script</b> using <b>pborca.exe</b></td>
+ </tr>
+</table>
+</p>
+
+<p>
+<b>NOTE :</b>
+
+To use this tool you have to set your <b>path</b> environment variable to PowerBuilder shared files.
+</p>
+
+<hr>
+<b>Rools of the ORCA SCRIPT</b><BR>
+<p>
+
+One command - one line.<br>
+Comma - is delimiter for parameters of the command.<br>
+# at the begining of the line designate all text on the line as a comment.<br>
+<b>%<b> - is a meta symbol.<br>
+the following meta symbols are supported:<br>
+
+
+<table border=1 cellspacing=0>
+<tr>
+<th><span class=parm>%n</span></th><td>New line</td>
+</tr>
+<tr>
+<th><span class=parm>%r</span></th><td>Carriage return</td>
+</tr>
+<tr>
+<th><span class=parm>%t</span></th><td>Tab</td>
+</tr>
+<tr>
+<th><span class=parm>%,</span></th><td>Comma</td>
+</tr>
+<tr>
+<th><span class=parm>%%</span></th><td>%</td>
+</tr>
+<tr>
+<td colspan=2>combination with any other symbol - returns symbol itself</td>
+</tr>
+</table>
+Some parameters are optional and could be omitted. In this help they are quoted with []:<br>
+<span class=cmd>regenerate </span><span class=parm>[pblName], [itemName], [itemType]</span><br>
+If a parameter is omitted, you must specify coma in any case. Example:<br>
+<span class=rem>#regenerate all windows in test.pbl</span><br>
+<span class=cmd>regenerate </span><span class=parm>test.pbl, , win</span><br><br>
+<span class=rem>#regenerate all objects named "main" in test.pbl</span><br>
+<span class=cmd>regenerate </span><span class=parm>test.pbl, main, </span><br><br>
+<span class=rem>#regenerate all objects in test.pbl</span><br>
+<span class=cmd>regenerate </span><span class=parm>test.pbl, , </span><br><br>
+<span class=rem>#regenerate all objects in all libraries from the current library list</span><br>
+<span class=cmd>regenerate </span><span class=parm> , , </span><br><br>
+The command parameters could contain environment variables:<br>
+<span class=rem>#create library my.pbl in %TMP% directory</span><br>
+<span class=cmd>library create </span><span class=parm> %%TMP%%\my.pbl , </span><br><br>
+You can pass variables as parameters to pborca.exe :<br>
+&nbsp;&nbsp;&nbsp;pborca.exe -Dsrcdir=c:\projects\TestSvn -Ddstdir=c:\projects\TestPb<br>
+In script you can access these new variables:<br>
+<span class=rem>#import c:\projects\TestSvn\myObject.sru into c:\projects\TestPb\myLib.pbl</span><br>
+<span class=cmd>import </span><span class=parm> %%SRCDIR%%\myObject.sru , %%DSTDIR%%\myLib.pbl </span><br><br>
+
+
+</p>
+
+<hr>
+<b>SUPPORTED ORCA COMMANDS</b><br>
+
+<table border=1 cellspacing=0>
+<tr>
+<td><span class=cmd>session begin</span> <span class=parm>pbOrcDll</span></td>
+<td>
+Starts orca session. The new parameter <span class=parm>pbOrcDll</span> 
+defines which PowerBuilder version you are going to use during this session.<br>
+This library appears in the PowerBuilder <b>Shared</b> folder.<br>
+The name of this library is <b>pborcXX.dll</b>, where XX is version of PowerBuilder. For example:
+<table border=0 cellspacing=1>
+<tr>
+	<td class=tab>PB Version</td>  <td class=tab>DLL Name</td>
+</tr>
+<tr>
+	<td class=tab>6.5</td>  <td class=tab>pborc65.dll</td>
+</tr>
+
+<tr>
+	<td class=tab>7.0</td>  <td class=tab>pborc70.dll</td>
+</tr>
+
+<tr>
+	<td class=tab>9.0</td>  <td class=tab>pborc90.dll</td>
+</tr>
+
+<tr>
+	<td class=tab>10.0</td>  <td class=tab>pborc100.dll</td>
+</tr>
+
+<tr>
+	<td class=tab>10.5</td>  <td class=tab>pborc105.dll</td>
+</tr>
+</table>
+<span class=rem>#Example of command: </span><br>
+<span class=cmd>session begin</span> <span class=parm>pborc70.dll</span> <br>
+<b>Note: current version of PBORCA.exe does not support unicode versions of PB</b>
+</td>
+</tr>
+
+<tr>
+<td><span class=cmd>copy item</span><span class=parm> pblSrc, [entryName], [entryType], pblDst</span></td>
+<td>copies object(s) from library <span class=parm>pblSrc</span> to <span class=parm>pblDst</span>.<br>
+<span class=parm>entryName</span> or/and <span class=parm>entryType</span> could be omitted for all objects.<br>
+<span class=parm>entryType</span>: app, dw, fn, menu, query, struct, uo, pipe, proxy, or win.<br>
+<span class=parm>pblSrc</span> can contain wildcard characters (* and ?). <br>
+<b>Note: this command overwrites item in the destination library.</b>
+</td>
+</tr>
+
+<tr>
+<td><span class=cmd>library create </span><span class=parm>pblName, [comments]</span></td>
+<td>creates a new library <span class=parm>pblName</span> with <span class=parm>comments</span></td>
+</tr>
+
+<tr>
+<td><span class=cmd>set liblist begin</span></td>
+<td>Special command to begin library list enumeration.<br> 
+After this command, every line is a pbl library name.<br> 
+There could be comments within the library list.<br>
+Optionally you can specify parameters of PBL compilation (used only for <span class=cmd>build exe </span> command).<br>
+The format of library list item is:<br>
+<span class=parm>pblName[;] [, isPBD [, pbrName] ]</span><br>
+Where:<br> 
+<span class=parm>pblName</span> is a library name. It can contain ';' at the end (like in PB library list)<br>
+<span class=parm>isPBD</span> specifies a way to build this library. Use value <b>1</b> to build PBD/DLL for this library, 
+or <b>0</b> to include it into executable. 
+If this option is omitted then default value used = 1.<br>
+<span class=parm>pbrName</span> defines a resource file for the <span class=parm>pblName</span>. 
+You can't specify <span class=parm>pbrName</span> if <span class=parm>isPBD</span>=0.<br>
+<span class=rem>#Usage example: </span><br><br>
+<span class=cmd>set liblist begin</span><br>
+<span class=rem>#do not compile test1.pbl into separate PBD/DLL</span><br>
+<span class=parm>test1.pbl   , 0</span><br>
+<span class=rem>#compile test2.pbl into separate PBD/DLL and use test2.pbr resource file</span><br>
+<span class=parm>test2.pbl   , 1, test2.pbr</span><br>
+<span class=rem>#compile test3.pbl into separate PBD/DLL (default behavior)</span><br>
+<span class=parm>test3.pbl</span><br>
+<span class=cmd>set liblist end</span><br>
+</td>
+</tr>
+
+<tr>
+<td><span class=cmd>set liblist end</span></td>
+<td>Special command to end library list enumeration.</td>
+</tr>
+
+
+<tr>
+<td><span class=cmd>set application </span><span class=parm>pblName, applicationName</span></td>
+<td>Sets current application <span class=parm>applicationName</span>. The parameter <span class=parm> pblName</span> defines name of the application library.<br>
+If both parameters ommited, ORCA will set up an internal default application as current application (usefull to create(import) a new application).</td>
+</tr>
+
+<tr>
+<td><span class=cmd>build app </span><span class=parm>buildType</span></td><td>Compiles all the objects in the libraries included on the library list.<br>
+If necessary, the compilation is done in multiple passes to resolve circular dependencies.<br>
+<span class=parm>buildType</span>: <b>full</b> or <b>incremental</b> or <b>migrate</b>.</td>
+</tr>
+
+
+<tr>
+<td><span class=cmd>build exe </span><span class=parm>exeName, iconName, pbrName, codeType</span></td>
+<td>
+Creates a PowerBuilder executable with <span class=parm>codeType</span>=pcode or <span class=parm>codeType</span>=machinecode.<br>
+<b>Note: before creating executable you must delete the file <span class=parm>exeName</span> if it exists.</b>
+</td>
+</tr>
+
+<tr>
+<td><span class=cmd>build library </span><span class=parm>pblName, [pbrName], type</span></td>
+<td>
+Creates a separated PowerBuilder dynamic library with <span class=parm>type</span>=pbd or <span class=parm>type</span>=dll.<br>
+<b>Note: To build all libraries+executable use <span class=cmd>build exe </span> command.</b>
+</td>
+</tr>
+
+
+<tr>
+<td><span class=cmd>delete item </span><span class=parm>pblName, entryName, entryType</span></td>
+<td>Deletes a PowerBuilder library entry <span class=parm>entryName</span> of type <span class=parm>entryType</span> from library <span class=parm>pblName</span>.</td>
+</tr>
+
+<tr>
+<td><span class=cmd>delete duplex </span><span class=parm>primaryLib, deleteFromLib</span></td>
+<td>Deletes objects from <span class=parm>deleteFromLib</span> that found in the <span class=parm>primaryLib</span>.</td>
+</tr>
+
+<tr>
+<td><span class=cmd>regenerate </span><span class=parm>[pblName], [itemName], [itemType]</span></td>
+<td>Compiles an object <span class=parm>itemName</span> of type <span class=parm>itemType</span> in a PowerBuilder library <span class=parm>pblName</span>.<br>
+The <span class=parm>itemName</span> and/or <span class=parm>itemType</span> could be omitted, then the parameter will be ignored.<br>
+If <span class=parm>pblName</span> is omitted then regeneration will be done for all libraries from the library list.<br>
+Note: you should set library list and application, to make regeneration correctly.</td>
+</tr>
+
+
+<tr>
+<td><span class=cmd>regenerateall </span></td>
+<td>Compiles (regenerates) each object from the library list while there are compilation errors. 
+This command was created specially for use after importing the whole project from source files.
+During rebuild ( full or migrate ) pborca can crash. In this case use this command.<br>
+Note: you should set library list and application, to make regeneration correctly.</td>
+</tr>
+
+
+<tr>
+<td><span class=cmd>export </span><span class=parm>pblName, [itemName], [itemType], directory</span></td>
+<td>Exports object(s) defined by <span class=parm>itemName</span> and <span class=parm>itemType</span> from a library <span class=parm>pblName</span> to a destination <span class=parm>directory</span>.<br>
+The <span class=parm>itemName</span> and/or <span class=parm>itemType</span> could be omitted, then the parameter will be ignored.<br>
+The <span class=parm>pblName</span> can contain wildcard characters (* and ?).
+For unicode version only HEXASCII export type implemented.</td>
+</tr>
+
+
+<tr>
+<td><span class=cmd>import </span><span class=parm>exportedFile, dstLibrary</span></td>
+<td>Imports previously exported object(s) from <span class=parm>exportedFile</span> into <span class=parm>dstLibrary</span>. 
+Ignores all compilation errors. You must set application before calling this function. 
+If it's a new application, you must set default application by calling <br>
+<span class=cmd>set application , </span><br>
+without any parameters. After whole application import you must call <span class=cmd>build app migrate </span>.<br>
+The <span class=parm>exportedFile</span> can contain wildcard characters (* and ?).<br>
+<span class=rem>#Usage example: </span><br>
+<span class=cmd>import </span><span class=parm>*.sr?, temp\work.pbl</span><br>
+For unicode version only HEXASCII, ASCII, and UNICODE file types are supported.
+</td>
+</tr>
+
+
+<tr>
+<td><span class=cmd>import move </span><span class=parm>exportedFile, dstLibrary</span></td>
+<td>The same as <span class=cmd>import </span> but after execution <span class=parm>exportedFile</span> will be deleted from your disk.
+</td>
+</tr>
+
+<tr>
+<td><span class=cmd>import moveok </span><span class=parm>exportedFile, dstLibrary</span></td>
+<td>The same as <span class=cmd>import move</span> but after execution <span class=parm>exportedFile</span> 
+will be deleted from your disk only if import was done without any errors.
+</td>
+</tr>
+
+
+<tr>
+<td><span class=cmd>import pbg2pbl </span><span class=parm>pbgFile, dstFolder</span></td>
+<td>Imports all objects specified in the <span class=parm>pbgFile</span> into corresponding pbl file located in <span class=parm>dstFolder</span><br>
+<span class=parm>pbgFile</span> could contain wildcard symbols. <span class=parm>dstFolder</span> is a path where PBLs must be located.<br>
+Libraries must exist and present in the library list.
+</td>
+</tr>
+
+<tr>
+<td><span class=cmd>import pbg2pbl any</span> <span class=parm>pbgFile, dstFolder</span></td>
+<td>The same as <span class=cmd>import pbg2pbl</span> but skips pbg and source files if they are not exists.
+</td>
+</tr>
+
+
+<tr>
+<td><span class=cmd>sys </span><span class=parm>sys_command</span></td>
+<td>Executes system command defined by <span class=parm>sys_command</span>.</td>
+</tr>
+
+<tr>
+<td><span class=cmd>echo </span><span class=parm>text</span></td>
+<td>Displays <span class=parm>text</span> messagee.</td>
+</tr>
+
+<tr>
+<td><span class=cmd>timestamp</span></td>
+<td>displays current date and time.</td>
+</tr>
+
+<tr>
+<td><span class=cmd>target create lib</span> <span class=parm>pbtFile</span></td>
+<td>creates powerbuilder libraries that are specified in the target file <span class=parm>pbtFile</span>. <br>
+Libraries will be located in the relative path to <span class=parm>pbtFile</span>.<br>
+Note: target should contain only relative paths for libraries!
+</td>
+</tr>
+
+<tr>
+<td><span class=cmd>target import</span> <span class=parm>pbtFile, sourceDir</span></td>
+<td>For each library specified in <span class=parm>pbtFile</span>, <br>
+&nbsp;&nbsp;&nbsp;opens corresponding pbg file in <span class=parm>sourceDir</span>, <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;and imports all the objects from the <span class=parm>sourceDir</span> for each pbg <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;into a library that is located near <span class=parm>pbtFile</span>.<br>
+Note: Before this command you have to set library list and application.
+</td>
+</tr>
+
+<tr>
+<td><span class=cmd>target import any</span> <span class=parm>pbtFile, sourceDir</span></td>
+<td>The same as <span class=cmd>target import</span>  but skips pbg and source files if they are not exists.
+</td>
+</tr>
+
+<tr>
+<td><span class=cmd>target set app</span> <span class=parm>pbtFile</span></td>
+<td>Sets current application specified in <span class=parm>pbtFile</span>. See: <span class=cmd>set application </span> command.
+</td>
+</tr>
+
+<tr>
+<td><span class=cmd>target set liblist</span> <span class=parm>pbtFile</span></td>
+<td>Sets library list specified in <span class=parm>pbtFile</span>.
+</td>
+</tr>
+
+<tr>
+<td><span class=cmd>set exeinfo property</span> <span class=parm>propName, propValue</span></td>
+<td>Sets the executable version parameter. <span class=parm>propName</span> could be: <br>
+companyname | productname | description | copyright | fileversion | fileversionnum | productversion | productversionnum | manifestinfo<br>
+</td>
+</tr>
+
+<tr>
+<td><span class=cmd>profile string</span> <span class=parm>iniFile, section, key</span></td>
+<td>reads the value from the <span class=parm>iniFile</span> specified by <span class=parm>section</span> and 
+ <span class=parm>key</span> and puts the result into environment variable named <span class=parm>key</span>.<br>
+ So, you can access the value using <span class=parm>%%key%%</span>.<br>
+ Example: <br>
+ <span class=cmd>profile string</span> <span class=parm>.\build.ini, version, revision</span><br>
+ <span class=cmd>echo</span> <span class=parm>%%revision%%</span><br>
+</td>
+</tr>
+
+<tr>
+<td><span class=cmd>profile exeinfo</span> <span class=parm>iniFile, section</span></td>
+<td>reads the values from the <span class=parm>iniFile</span> specified by <span class=parm>section</span>.<br> 
+the following keys will be read from the specified file and section:<br>
+companyname | productname | description | copyright | fileversion | fileversionnum | productversion | productversionnum | manifestinfo<br>
+and assigned into corresponding exeinfo property.
+</td>
+</tr>
+
+<tr>
+<td><span class=cmd>session end</span></td>
+<td>ends orca session.</td>
+</tr>
+</table>
+
+
+
+<br>
+<br>
+<br>
+<br>
+<hr>
+<br>
+<br>
+
+
+<table border=1 cellspacing=0 width="100%">
+<tr>
+<th colspan=2>What's new</th>
+</tr>
+
+<tr>
+<th>Version</th>
+<th>List of changes</th>
+</tr>
+
+
+<tr>
+<td>2009-11-19</td>
+<td>support of larger object names (for PB11 and upper)
+</td>
+</tr>
+
+<tr>
+<td>2009-10-23</td>
+<td>Support of manifestinfo for <span class=cmd>* exeinfo</span> commands<br>
+Display warning if command not supported by current pborca library.
+</td>
+</tr>
+
+<tr>
+<td>2009-10-21</td>
+<td>Better error processing in <span class=cmd>* import</span> commands</td>
+</tr>
+
+<tr>
+<td>2009-10-09</td>
+<td>Minor bug corrected</td>
+</tr>
+
+<tr>
+<td>2009-05-17</td>
+<td>Implemented <span class=cmd>profile</span> and <span class=cmd>exeinfo</span> commands. <br >Corrected the bug when "*.pbd" files are in library list.</td>
+</tr>
+
+<tr>
+<td>2007-08-08</td>
+<td>Implemented export/import of the binary part of objects (for ole objects)</td>
+</tr>
+
+<tr>
+<td>2007-06-21</td>
+<td>Added <span class=cmd>target</span> commands and support of the environment variables</td>
+</tr>
+
+<tr>
+<td>2006-11-05</td>
+<td>Added check for file importing if library exists.<br>
+new command <span class=cmd>import pbg2pbl </span>
+</td>
+</tr>
+
+<tr>
+<td>2005-04-08(2)</td>
+<td>Crash during import bug corrected.
+</td>
+</tr>
+
+
+<tr>
+<td>2005-04-08</td>
+<td>Added new commands "import move" and "import moveok".<br>
+UNICODE versions support (tested only with PB10).
+</td>
+</tr>
+
+
+<tr>
+<td>2005-01-13</td>
+<td>Added new command "regenerateall".</td>
+</tr>
+
+
+<tr>
+<td>2004-08-19</td>
+<td>Fixed small problem with memory leak during executable compilation.</td>
+</tr>
+
+
+<tr>
+<td>2004-08-18</td>
+<td>Now you can specify compilation options for each library in the library list (isPBD, pbrName).</td>
+</tr>
+
+</table>
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+<HR>
+
+<CENTER>
+	<A HREF="#TOP">top</A> | 
+	<A HREF="../index.htm">control panel</A> |
+	<a href="mailto:dlukyanov@ukr.net">write to support</a><br>
+</CENTER>
+
+
+</body>
+
+</html>

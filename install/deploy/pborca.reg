@@ -1,0 +1,32 @@
+REGEDIT4
+
+[HKEY_CLASSES_ROOT\.orc]
+@="PB.Orca.Script"
+
+
+
+
+[HKEY_CLASSES_ROOT\PB.Orca.Script]
+@="PBOrca Script"
+"EditFlags"=dword:00010000
+"BrowserFlags"=dword:00000008
+"AlwaysShowExt"=""
+
+[HKEY_CLASSES_ROOT\PB.Orca.Script\DefaultIcon]
+@="pborca.exe,0"
+
+[HKEY_CLASSES_ROOT\PB.Orca.Script\shell]
+@="open"
+
+[HKEY_CLASSES_ROOT\PB.Orca.Script\shell\open]
+@="Edit Script"
+
+[HKEY_CLASSES_ROOT\PB.Orca.Script\shell\open\command]
+@="NOTEPAD.EXE \"%1\""
+
+[HKEY_CLASSES_ROOT\PB.Orca.Script\shell\RunScript]
+@="Run Script"
+
+[HKEY_CLASSES_ROOT\PB.Orca.Script\shell\RunScript\command]
+@="pborca.exe \"%1\" -w"
+

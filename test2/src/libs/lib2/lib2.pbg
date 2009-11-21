@@ -1,0 +1,8 @@
+Save Format v3.0(19990112)
+@begin Libraries
+ "libs\\lib2\\lib2.pbl" "";
+@end;
+@begin Objects
+ "libs\\lib2\\w_111.srw" "libs\\lib2\\lib2.pbl";
+ "libs\\lib2\\w_222.srw" "libs\\lib2\\lib2.pbl";
+@end;

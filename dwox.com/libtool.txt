@@ -1,0 +1,115 @@
+Introduction:
+-------------
+Libtool is a small utility that reads PowerBuilder Libraries
+or other PowerBuilder generated files like PBDs, DLLs and EXEs.
+
+It comes with enhanced dump capabilities and can display
+SCC/Checked-Out Informations that are stored within a
+PBL (pre PB 8).
+
+In conjunction with dw_ripper (www.dwox.com) it is possible
+to restore the Datawindow Syntax from compiled Datawindows
+(PBD/DLL/EXE).
+
+In conjunction with Filemon (www.sysinternals.com) you can
+open a LOG file (captured by Filemon) with libtool to
+analyse the libary/object accesses. (Highly recommended experience;-))
+
+Libtool can _not_ recompile any P-Code (you have to use another tool).
+
+With "expert" knowlegde you can recover (export) recently deleted
+objects by using the export from the "Xref.." View.
+Hint: Find the first (unreferenced) datablock that matches
+to be the start of your deleted object and export from there.
+(Use a Filter to find the candidates.)
+
+Setup and Configuration:
+--------------------------------------
+- Create a directory (like c:\program\libtool).
+- Copy the files libtool.exe and ms_rte.dll into
+  that directory.
+- Be sure that libtool can create a new file (libtool.ini)
+  in that directory (libtool home directory) during runtime.
+
+An extra TEMP-Directory for Libtool is recomended because some
+temporarily created files will not be deleted after
+use.  Also because there is no warning prompt before overwriting an
+existing file with the same name ("Export and Run..."-Feature).
+
+See also information in Menu -> Tools -> Preferences.
+
+Libtool was compiled with PowerBuilder 8.0.3 and comes with a
+separate DLL (ms_rte.dll). This DLL is used to display the
+"Block Dump" data view in a MS Richtext Control.
+
+
+Other program features :
+------------------------
+(You need the Right Mouse Button to access most of this functions!)
+
+FileDrop:
+      Drag and Drop Files into the Libtool window.
+
+Export:
+      Exports "raw" data from a Library.
+
+Export and Run:
+      Exports an entry (file) to the TEMP-Directory and opens this
+      with its default assigned application (simple "run filename").
+      The File resides in this directory, so an extra TEMP-Directory
+      is recomended to avoid conflicts.
+      (See Configuration).
+
+Dump Block:
+      Hex/Ascii Block Viewer for PB Files.
+
+XRef:
+      Shows what Objects/Meta Information can be found in the blocks
+      of a PBL.
+
+Filemon transformation:
+      Analyses a Filemon captured LOG File and shows to what
+      file segments this can be referenced. Simply open a *.LOG file.
+
+
+Filemon transformation
+----------------------
+Filemon tracks how many bytes are read at which position during
+runtime. Libtool analyses this information and shows, which objects
+are stored in the accessed file segments.
+
+For example:
+Offset: 28160  Length: 4086  -> "HDR*, FRE*, NOD*" blocks were read.
+Offset: 678560 Length: 16384 -> "object a, object b" can be found
+                                in this segment. "object a" was loaded.
+Known bugs:
+-----------
+I am not sure that the datetime conversations will work properly
+in all regions of the world. (southern hemisphere...)
+
+Feel free to send an email if you find any errors to
+arnd.schmidt@dwox.com.
+
+
+Planned functions and features:
+-------------------------------
+ReWrite corrupted SCC Flags.
+Easy Export of Source for recently deleted objects (if they
+are still in the PBL).
+Fragmentation Analyse Viewer.
+
+Core components will become "Open Source" under Sybase Code Exchange
+or elsewhere. (Planned for 2003)
+
+
+Attention
+---------
+Please do not modify a PBL/PBD/EXE/DLL with tools other
+than Powerbuilder or an "official" 3rd Party Tool.
+
+If you are going to modify a file with another tool, be sure
+that you have a valid and actual backup of the file even though
+the file might already be corrupted.
+
+
+Arnd Schmidt                               20.05.2003 (reviewed 2003/08)
