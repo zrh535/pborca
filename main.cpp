@@ -86,6 +86,16 @@ int help(){
 	return 1;
 }
 
+int version(){
+	printf("version=%s.%s\n",PBORCA_VER,PBORCA_REV);
+#ifdef _UNICODE
+	printf("type=UNICODE\n");
+#else
+	printf("type=ANSI\n");
+#endif
+	return 0;
+}
+
 TCHAR * trim(TCHAR * c,TCHAR*space){
 	int i=0;
 	while(c[0]&&_tcschr(space,c[0]))c++;
@@ -180,6 +190,7 @@ int main(int argc, char* argv[]){
 			switch(argv[i][1]){
 				case '?':return help();
 				case 'h':return help();
+				case 'v':return version();
 				case 'w':{
 					wait=true;
 					break;
