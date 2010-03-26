@@ -16,14 +16,14 @@ OBJS= $(CPP_FILES:.cpp=.obj)
 all: $(PRJNAME).res $(PRJNAME).exe
 
 $(PRJNAME).res: $(PRJNAME).rc
-   rc $(rcvars) $(rcplags) -r -fo $(PRJNAME).res $(PRJNAME).rc
+	rc $(rcvars) $(rcplags) -r -fo $(PRJNAME).res $(PRJNAME).rc
 
 $(PRJNAME).exe: $(OBJS)
-  $(link) /RELEASE $(conlflags) -out:bin\$*a.exe $** $(PRJNAME).res $(conlibs) \
+	$(link) /RELEASE $(conlflags) -out:bin\$*a.exe $** $(PRJNAME).res $(conlibs) \
     user32.lib advapi32.lib
 
 clean:
-    -del *.obj
+	-del *.obj
 	-del *.pch
 	-del *.exp
 	-del *.lib
