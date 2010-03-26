@@ -7,6 +7,7 @@
 #include "parm.h"
 #include "orca.h"
 #include "target.h"
+#include "tmp\version.h"
 
 #define IFERR(a)	if(!a)goto error;
 
@@ -70,7 +71,7 @@ void settitle(TCHAR*info){
 }
 
 int help(){
-	printf("version 2009-11-19 ");
+	printf("version %s.%s built on %s ",PBORCA_VER,PBORCA_REV,PBORCA_DATE);
 #ifdef _UNICODE
 	printf("(UNICODE)\n");
 #else

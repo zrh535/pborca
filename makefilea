@@ -13,7 +13,10 @@ OBJS= $(CPP_FILES:.cpp=.obj)
 
 
 
-all: $(PRJNAME).res $(PRJNAME).exe
+all: ver $(PRJNAME).res $(PRJNAME).exe
+
+ver: 
+	-SubWCRev . version.hxx tmp\version.h
 
 $(PRJNAME).res: $(PRJNAME).rc
 	rc $(rcvars) $(rcplags) -r -fo $(PRJNAME).res $(PRJNAME).rc
