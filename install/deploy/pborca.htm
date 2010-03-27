@@ -33,19 +33,13 @@
 
 <body bgcolor=#ffffff>
 
-<font color=red>
-NEW: Wide char PBORCA!!!<br>
+<h2>PBORCA.exe help</h2>
 <br>
-Note: The pborca script file and command line parameters are still ANSI
-</font>
-<hr>
+This tool dedicated to build powerbuilder executables and libraries from sources using commandline.<br>
 
-<b>WHAT IS PBORCA.EXE ?</b> - it is a free tool to compile Powerbuilder projects and to manage objects in PBL libraries.<br>
-<b>*.ORC</b> files - it's a special scripts to do it.<br>
 
 <br>
-Download New UNICODE+ANSI version: <a href="pborcaw.zip">pborcaW.zip</a> version (YMD)2009-11-19<br>
-<!--Download Old ANSI version: <a href="pborcaa.rar">pborcaA.rar</a> version (YMD)2005-01-13<br-->
+Visit <a href="http://code.google.com/p/pborca/downloads/list">download</a> page to chech for new versions.<br>
 
 
 <hr>
@@ -249,9 +243,10 @@ If necessary, the compilation is done in multiple passes to resolve circular dep
 
 
 <tr>
-<td><span class=cmd>build exe </span><span class=parm>exeName, iconName, pbrName, codeType</span></td>
+<td><span class=cmd>build exe </span><span class=parm>exeName, iconName, pbrName, flags</span></td>
 <td>
-Creates a PowerBuilder executable with <span class=parm>codeType</span>=pcode or <span class=parm>codeType</span>=machinecode.<br>
+Creates a PowerBuilder executable.<br>
+<span class=parm>flags: pcode, machinecode, stylexp</span>. To build pcode with new style use: <span class=parm>pcode|stylexp</span><br>
 <b>Note: before creating executable you must delete the file <span class=parm>exeName</span> if it exists.</b>
 </td>
 </tr>
@@ -453,6 +448,12 @@ and assigned into corresponding exeinfo property.
 
 
 <tr>
+<td>1.00</td>
+<td>Support of XP styles (see <span class=cmd>build exe</span> command)<br>
+</td>
+</tr>
+
+<tr>
 <td>2009-11-19</td>
 <td>support of larger object names (for PB11 and upper)
 </td>
@@ -551,13 +552,6 @@ UNICODE versions support (tested only with PB10).
 <br>
 <br>
 
-<HR>
-
-<CENTER>
-	<A HREF="#TOP">top</A> | 
-	<A HREF="../index.htm">control panel</A> |
-	<a href="mailto:dlukyanov@ukr.net">write to support</a><br>
-</CENTER>
 
 
 </body>
