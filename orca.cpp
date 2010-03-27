@@ -618,8 +618,36 @@ void __stdcall cbOrcaLinkProc(PPBORCA_LINKERR err,LPVOID uData){
 	_tprintf(TEXT("%s\n"),err->lpszMessageText);
 }
 
+//expect a|b|c as input string
+//split it to separate strings
+long _getExeFlags(TCHAR*parm){
+	TCHAR *pos0=parm;
+	TCHAR *pos1=_tcschr(pos0,'|');
+	long flags=0;
+	
+	while(pos0){
+		if(pos1){pos1[0]=0;pos1++;}
+		pos0=trim(pos0);
+		
+		if(!_tcscmp(pos0,TEXT("pcode"))){
+		}else if(!_tcscmp(pos0,TEXT("machinecode"))){
+			flags|=PBORCA_MACHINE_DEFAULT;
+		}else if(!_tcscmp(pos0,TEXT("stylexp"))){
+			flags|=PBORCA_NEW_VISUAL_STYLE_CONTROLS;
+		}else{
+			printline();
+			_tprintf(TEXT("wrong exe type: \"%s\"\n"),pos0);
+			return -1;
+		}
+		pos0=pos1;
+		if(pos1)pos1=_tcschr(pos1,'|');
+	}
+	
+	return flags;
+}
+
 BOOL orcaBuildExecutable(TCHAR**parm){
-	int ret;
+	int ret=0;
 	int eFlag;
 	
 	TCHAR*exeName=parm[0];
@@ -629,13 +657,9 @@ BOOL orcaBuildExecutable(TCHAR**parm){
 	
 	log(TEXT("build executable"));
 	if(type==NULL)type=TEXT("<NULL>");
-	if(!_tcscmp(type,TEXT("pcode")))eFlag=0;
-	else if(!_tcscmp(type,TEXT("machinecode")))eFlag=PBORCA_MACHINE_DEFAULT;
-	else{
-		printline();
-		_tprintf(TEXT("wrong exe type: \"%s\"\n"),type);
-		return false;
-	}
+	
+	eFlag=_getExeFlags(type);
+	if(eFlag==-1)return false;
 	
 	if(!liblist){
 		printline();
@@ -651,8 +675,10 @@ BOOL orcaBuildExecutable(TCHAR**parm){
 		return false;
 	}
 	
-	if(exeinfo)ret=XORCA_SetExeInfo(session,exeinfo);
-	if(orcaError(ret))return false;
+	if(exeinfo){
+		ret=XORCA_SetExeInfo(session,exeinfo);
+		if(orcaError(ret))return false;
+	}
 	
 	int *pbd=new int[libcount];
 	LIBLIST *ill=liblist;
@@ -661,7 +687,8 @@ BOOL orcaBuildExecutable(TCHAR**parm){
 			pbd[i]=1;//pbd/dll from pbl
 			if( !_tcsicmp(__T(".pbl"), ill->lib+(_tcslen(ill->lib)-4) ) ) {
 				if(!checkPBR(ill->pbr))goto error;
-				ret=XORCA_DynamicLibraryCreate (session,ill->lib,ill->pbr,eFlag );
+_tprintf(TEXT("eFlag=%d %d\n"),eFlag, eFlag&PBORCA_MACHINE_DEFAULT );
+				ret=XORCA_DynamicLibraryCreate (session,ill->lib,ill->pbr,  (eFlag&PBORCA_MACHINE_DEFAULT?eFlag:0) ); //for  pcode eFlag could be only 0
 				if(orcaError(ret))goto error;
 			}
 		}else{
@@ -669,7 +696,7 @@ BOOL orcaBuildExecutable(TCHAR**parm){
 		}
 		ill=(LIBLIST*)ill->next;
 	}
-_tprintf(TEXT("pbr file \"%s\"."),pbrName);
+	_tprintf(TEXT("pbr file \"%s\".\n"),pbrName);
 	ret=XORCA_ExecutableCreate ( session, exeName, iconName, pbrName,
 		cbOrcaLinkProc, NULL, pbd, libcount, eFlag );
 	if(orcaError(ret))goto error;

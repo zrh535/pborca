@@ -169,6 +169,8 @@ typedef int INT;
 #define PBORCA_MACHINE_CODE_68KMAC		0x00002000
 #define PBORCA_MACHINE_CODE_FATMAC		0x00004000
 
+#define PBORCA_NEW_VISUAL_STYLE_CONTROLS		0x00000400 	//XP Enhancement
+
 
 // Common combinations
 
