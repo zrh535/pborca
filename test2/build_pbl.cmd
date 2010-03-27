@@ -1,5 +1,6 @@
 @echo off
 rmdir /Q /S pbl
+rmdir /Q /S exe
 
 set PBORCA=..\pborca.exe
 rem next command to support current svn repository

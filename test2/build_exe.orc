@@ -10,7 +10,7 @@ target set app     pbtestx.pbt
 
 build app full
 
-build exe pbtestx.exe, ,pbtestx.pbr , pcode
+build exe pbtestx.exe, ,pbtestx.pbr , pcode | stylexp
 
 
 session end
