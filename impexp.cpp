@@ -87,6 +87,9 @@ int _orcaReadType(FILE*f,unsigned int * flen){
 	}else if (c1=='H' && c2=='A'){
 		ret=IMPEXP_HASCII;
 		flen[0]-=2;
+	}else if (c1==0x00EF && c2==0x00BB && fgetc(f)==0x00BF){
+		ret=IMPEXP_UTF8;
+		flen[0]-=3;
 	}else {
 		//reset to beginning import as HASCII - almost the same except those stupid macros $$HEX$$
 		fseek( f, 0, SEEK_SET); 
@@ -176,6 +179,22 @@ BOOL _orcaRead(TCHAR*fname,ORCAIMPORTREAD*ir){
 			ir->buf=new TCHAR[flen+1];
 			while( i<flen && (c=fgetwc(f)) !=-1 )ir->buf[i++]=c;
 			ir->buf[flen]=0;
+		}else if(ietype==IMPEXP_UTF8){
+			CHAR *mbc=new CHAR[flen+1];
+			fread(mbc,1,flen,f);
+			int wlen=MultiByteToWideChar(CP_UTF8,0,mbc,flen,NULL,0);
+			WCHAR *wc=new WCHAR[wlen+1];
+			MultiByteToWideChar(CP_UTF8,0,mbc,flen,wc,wlen+1);
+			if(wlen>0){i=wlen;flen=wlen;}
+			#ifdef _UNICODE
+				ir->buf=wc;
+				delete []mbc;
+			#else
+				ir->buf=mbc;
+				WideCharToMultiByte(CP_ACP,0,wc,wlen,ir->buf,wlen+1,NULL,NULL);
+				delete []wc;
+			#endif
+			ir->buf[wlen]=0;
 		}else{
 			ir->buf=new TCHAR[flen+1];
 			while( i<flen && (c=fgetc(f)) !=-1 )ir->buf[i++]=c;

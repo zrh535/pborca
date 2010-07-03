@@ -1,4 +1,4 @@
-HA$PBExportHeader$pbtestx.sra
+﻿$PBExportHeader$pbtestx.sra
 $PBExportComments$Generated Application Object
 forward
 global type pbtestx from application
@@ -32,7 +32,8 @@ destroy(error)
 destroy(message)
 end on
 
-event open;open(w_111)
+event open;//привед
+open(w_111)
 
 end event
 

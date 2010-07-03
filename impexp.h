@@ -1,8 +1,9 @@
 
 
-#define IMPEXP_ASCII 1
+#define IMPEXP_ASCII  1
 #define IMPEXP_HASCII 2
-#define IMPEXP_UNI 3
+#define IMPEXP_UNI    3
+#define IMPEXP_UTF8   4
 
 #define ORCAIMPORT_ITEM_LEN	300
 #define ORCAIMPORT_COMM_LEN	3000
